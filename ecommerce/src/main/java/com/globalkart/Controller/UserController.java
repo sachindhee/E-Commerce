@@ -2,10 +2,10 @@ package com.globalkart.Controller;
 
 import com.globalkart.Service.UserService;
 import com.globalkart.model.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,4 +21,8 @@ public class UserController {
         return userService.Register(user);
     }
 
+    @GetMapping("/email/{email}")
+    public Optional<User> getUserByEmail(@PathVariable String email) {
+        return userService.getEmails(email);
+    }
 }
