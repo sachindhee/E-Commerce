@@ -2,9 +2,10 @@ package com.globalkart.Service;
 
 import com.globalkart.Repository.ProductRepository;
 import com.globalkart.model.Product;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class ProductService {
 
     private final ProductRepository productRepository;
