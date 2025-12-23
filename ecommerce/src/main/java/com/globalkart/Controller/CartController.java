@@ -26,6 +26,15 @@ public class CartController {
                            @RequestParam Long productId) {
         return cartService.removeItemFromCart(userId, productId);
     }
+
+
+    @DeleteMapping("/clear")
+    public String clearCart(@RequestParam Long userId) {
+        cartService.clearCart(userId);
+        return "Cart cleared successfully";
+    }
+
+
 }
 
 

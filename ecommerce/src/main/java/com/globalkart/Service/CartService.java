@@ -81,4 +81,17 @@ public class CartService {
         return cartRepository.save(cart);
 
     }
+
+    @Transactional
+    public void clearCart(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        cart.getItems().clear();
+        cartRepository.save(cart);
+    }
 }
