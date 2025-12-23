@@ -8,6 +8,7 @@ import com.globalkart.model.Cart;
 import com.globalkart.model.CartItem;
 import com.globalkart.model.Product;
 import com.globalkart.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+
     public CartService(CartRepository cartRepository,
                        CartItemRepository cartItemRepository,
                        UserRepository userRepository,
@@ -42,6 +44,15 @@ public class CartService {
                     return cartRepository.save(c);
                 });
 
+        // ✅ CHECK: product already in cart?
+        for (CartItem item : cart.getItems()) {
+            if (item.getProduct().getId().equals(productId)) {
+                item.setQuantity(item.getQuantity() + quantity);
+                return cartRepository.save(cart);
+            }
+        }
+
+        // ✅ Else: create new cart item
         CartItem item = new CartItem();
         item.setCart(cart);
         item.setProduct(product);
@@ -49,10 +60,25 @@ public class CartService {
         item.setPrice(product.getPrice());
 
         cart.getItems().add(item);
-        cartItemRepository.save(item);
-
         return cartRepository.save(cart);
     }
 
 
+    @Transactional
+    public Cart removeItemFromCart(Long userId, Long productId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        // product match hone wala item remove karo
+        cart.getItems().removeIf(
+                item -> item.getProduct().getId().equals(productId)
+        );
+
+        return cartRepository.save(cart);
+
+    }
 }
