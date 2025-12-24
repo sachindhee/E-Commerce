@@ -20,7 +20,8 @@ public class Order {
    private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<> items;
+    private List<OrderItem> items;
+
 
     private BigDecimal totalAmount;
 
