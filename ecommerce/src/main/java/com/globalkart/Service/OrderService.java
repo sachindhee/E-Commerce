@@ -3,6 +3,8 @@ package com.globalkart.Service;
 import com.globalkart.Repository.CartRepository;
 import com.globalkart.Repository.OrderRepository;
 import com.globalkart.Repository.UserRepository;
+import com.globalkart.dto.OrderItemResponseDTO;
+import com.globalkart.dto.OrderResponseDTO;
 import com.globalkart.model.*;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,42 @@ public class OrderService {
 
         return savedOrder;
     }
+
+    public List<OrderResponseDTO> getOrderHistory(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Order> orders = orderRepository.findByUser(user);
+
+        List<OrderResponseDTO> response = new ArrayList<>();
+
+        for (Order order : orders) {
+
+            OrderResponseDTO dto = new OrderResponseDTO();
+            dto.setOrderId(order.getId());
+            dto.setOrderDate(order.getCreatedAt());
+            dto.setStatus(order.getStatus());
+            dto.setTotalAmount(order.getTotalAmount());
+
+            List<OrderItemResponseDTO> itemDTOs = new ArrayList<>();
+
+            for (OrderItem item : order.getItems()) {
+                OrderItemResponseDTO itemDTO = new OrderItemResponseDTO();
+                itemDTO.setProductId(item.getProduct().getId());
+                itemDTO.setProductName(item.getProduct().getName());
+                itemDTO.setQuantity(item.getQuantity());
+                itemDTO.setPrice(item.getPrice());
+                itemDTOs.add(itemDTO);
+            }
+
+            dto.setItems(itemDTOs);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
 
 
 }

@@ -2,11 +2,11 @@ package com.globalkart.Controller;
 
 
 import com.globalkart.Service.OrderService;
+import com.globalkart.dto.OrderResponseDTO;
 import com.globalkart.model.Order;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,4 +23,10 @@ public class OrderController {
     public Order placeOrder(@RequestParam Long userId) {
         return orderService.placeOrder(userId);
     }
+
+    @GetMapping("/history")
+    public List<OrderResponseDTO> orderHistory(@RequestParam Long userId) {
+        return orderService.getOrderHistory(userId);
+    }
+
 }
