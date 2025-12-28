@@ -2,11 +2,9 @@ package com.globalkart.Controller;
 
 
 import com.globalkart.Service.PaymentService;
+import com.globalkart.dto.PaymentVerifyRequest;
 import com.globalkart.model.Payment;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -21,6 +19,10 @@ public class PaymentController {
     @PostMapping("/create")
     public Payment createPayment(@RequestParam Long orderId) throws Exception {
         return paymentService.createPayment(orderId);
+    }
+    @PostMapping("/verify")
+    public String verifyPayment(@RequestBody PaymentVerifyRequest request) {
+        return paymentService.verifyPayment(request);
     }
 
 
